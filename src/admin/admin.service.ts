@@ -9,7 +9,7 @@ import { ValidatorsService } from 'src/helper/validators/validators.service';
 export class AdminService {
   constructor(
     private readonly prisma: PrismaService,
-    // private readonly validateUser: ValidatorsService,
+    private readonly validateUser: ValidatorsService,
   ) {}
   async createAdmin(createAdminDto: CreateAdminDto) {
     const existingAdmin = await this.prisma.admin.findUnique({
@@ -30,7 +30,7 @@ export class AdminService {
   }
 
   async getAdminById(adminId: string) {
-    // await this.validateUser.validateNurseId(adminId);
+    await this.validateUser.validateAdminId(adminId);
     const nurse = await this.prisma.admin.findUnique({
       where: { adminId: adminId },
     });

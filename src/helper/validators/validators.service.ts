@@ -1,22 +1,20 @@
 import {
   BadRequestException,
-  Global,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 
-@Global()
 @Injectable()
 export class ValidatorsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async validateAdminId(adminId: string) {
     if (!adminId) {
-      throw new BadRequestException('Nurse ID must be provided');
+      throw new BadRequestException('admin ID must be provided');
     }
     try {
-      const existingNurse = await this.prisma.admin.findUnique({
+      const existingAdmin = await this.prisma.admin.findUnique({
         where: {
           adminId: adminId,
         },
@@ -25,11 +23,11 @@ export class ValidatorsService {
         },
       });
 
-      if (!existingNurse) {
-        throw new NotFoundException('Nurse not found');
+      if (!existingAdmin) {
+        throw new NotFoundException('admin not found');
       }
 
-      return existingNurse;
+      return existingAdmin;
     } catch (error) {
       console.error('Error validating nurse ID:', error);
       throw error;
