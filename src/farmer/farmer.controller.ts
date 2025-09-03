@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { FarmerService } from './farmer.service';
 import { CreateFarmerDto } from './dto/create-farmer.dto';
 import { UpdateFarmerDto } from './dto/update-farmer.dto';
@@ -9,7 +17,7 @@ export class FarmerController {
 
   @Post()
   create(@Body() createFarmerDto: CreateFarmerDto) {
-    return this.farmerService.create(createFarmerDto);
+    return this.farmerService.createFarmer(createFarmerDto);
   }
 
   @Get()
