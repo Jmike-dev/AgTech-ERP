@@ -4,10 +4,8 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
-
 generator client {
   provider = "prisma-client-js"
-  // output   = "../generated/prisma"
 }
 
 datasource db {
@@ -15,28 +13,42 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Admin{
-  admin_id               String @id@default(cuid())
-  firstName              String
-  lastName               String
-  email                  String         @unique
-  password               String
-  created_At             DateTime       @default(now())
-  refreshToken           String?
-  // adminFarmers
-}
-model Farmer{
-  farmer_id String @id@default(cuid())
-  firstName              String
-  lastName               String
-  email                  String         @unique
-  password               String
-  created_At             DateTime       @default(now())
-  refreshToken           String?
+model Admin {
+  adminId      String    @id @default(cuid())
+  firstName    String
+  lastName     String
+  email        String    @unique
+  password     String
+  created_At   DateTime  @default(now())
+  refreshToken String?
+  farmers      Farmers[]
+  
+  @@map("admins")
 }
 
-model Crops{
-  crop_id String @id@default(cuid())
-  name String
-  number Int
+model Farmers {
+  farmerId     String    @id @default(cuid())
+  firstName    String
+  lastName     String
+  email        String    @unique
+  password     String
+  createdAt    DateTime  @default(now())
+  refreshToken String?
+  adminId      String
+  
+  // Relationships
+  admin        Admin     @relation(fields: [adminId], references: [adminId], onDelete: Cascade)
+  crops        Crops[]
+  
+  @@map("farmers")
+}
+
+model Crops {
+  cropId   String  @id @default(cuid())
+  name      String
+  number    Int  
+  farmerId  String
+  farmer    Farmers @relation(fields: [farmerId], references: [farmerId], onDelete: Cascade)
+  
+  @@map("crops")
 }
