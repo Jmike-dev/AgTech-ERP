@@ -29,8 +29,11 @@ export class FarmerController {
     return this.farmerService.AllFarmersByAdminId(adminId);
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateFarmerDto: UpdateFarmerDto) {
-  //   return this.farmerService.update(+id, updateFarmerDto);
-  // }
+  @Patch(':farmerId')
+  update(
+    @Param('farmerId') farmerId: string,
+    @Body() updateFarmerDto: UpdateFarmerDto,
+  ) {
+    return this.farmerService.updateFarmer(farmerId, updateFarmerDto);
+  }
 }

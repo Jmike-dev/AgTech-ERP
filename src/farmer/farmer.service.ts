@@ -56,11 +56,20 @@ export class FarmerService {
     });
   }
 
-  update(id: number, updateFarmerDto: UpdateFarmerDto) {
-    return `This action updates a #${id} farmer`;
-  }
+  async updateFarmer(farmerId: string, updateFarmerDto: UpdateFarmerDto) {
+    await this.validateUser.validateFarmerId(farmerId);
 
-  remove(id: number) {
-    return `This action removes a #${id} farmer`;
+    return await this.prisma.farmers.update({
+      where: { farmerId: farmerId },
+      data: updateFarmerDto,
+      select: {
+        farmerId: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        createdAt: true,
+        adminId: true,
+      },
+    });
   }
 }
