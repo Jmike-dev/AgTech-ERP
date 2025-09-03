@@ -36,9 +36,4 @@ export class CropsController {
   ) {
     return this.cropsService.updateCrop(cropId, updateCropDto);
   }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.cropsService.remove(+id);
-  // }
 }
