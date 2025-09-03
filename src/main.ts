@@ -7,11 +7,9 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('AgTech-ERP API')
-    .setDescription(
-      'this API is meant handle all request in a medical recorder request for a nurse in an institution ',
-    )
+    .setDescription('this is a simple AgTech-ERP ')
     .setVersion('1.0')
-    .addTag('Medical recorder')
+    .addTag('AgTech-ERP')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
