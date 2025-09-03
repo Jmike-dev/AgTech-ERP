@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,6 +5,12 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+// Enum for roles
+enum Role {
+  ADMIN
+  FARMER
 }
 
 model Admin {
@@ -21,6 +21,7 @@ model Admin {
   password     String
   created_At   DateTime  @default(now())
   refreshToken String?
+  role         Role      @default(ADMIN)   
   farmers      Farmers[]
   
   @@map("admins")
@@ -34,8 +35,9 @@ model Farmers {
   password     String
   createdAt    DateTime  @default(now())
   refreshToken String?
+  role         Role      @default(FARMER)  
   adminId      String
-  
+
   // Relationships
   admin        Admin     @relation(fields: [adminId], references: [adminId], onDelete: Cascade)
   crops        Crops[]
@@ -45,10 +47,10 @@ model Farmers {
 
 model Crops {
   cropId   String  @id @default(cuid())
-  name      String
-  number    Int  
-  farmerId  String
-  farmer    Farmers @relation(fields: [farmerId], references: [farmerId], onDelete: Cascade)
+  name     String
+  number   Int  
+  farmerId String
+  farmer   Farmers @relation(fields: [farmerId], references: [farmerId], onDelete: Cascade)
   
   @@map("crops")
 }

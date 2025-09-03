@@ -23,10 +23,16 @@ export class FarmerService {
     const hashPassword = await bcrypt.hash(createFarmerDto.password, 10);
     const farmer = await this.prisma.farmers.create({
       data: { ...createFarmerDto, password: hashPassword },
+      select: {
+        farmerId: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        role: true,
+      },
     });
 
-    const { password, refreshToken, ...farmerWithoutPassword } = farmer;
-    return farmerWithoutPassword;
+    return farmer;
   }
 
   async getAFarmerById(farmerId: string) {
