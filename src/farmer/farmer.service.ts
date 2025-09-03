@@ -3,12 +3,13 @@ import { CreateFarmerDto } from './dto/create-farmer.dto';
 import { UpdateFarmerDto } from './dto/update-farmer.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcryptjs';
+import { ValidatorsService } from 'src/helper/validators/validators.service';
 
 @Injectable()
 export class FarmerService {
   constructor(
     private readonly prisma: PrismaService,
-    // private readonly validateUser: ValidatorsService,
+    private readonly validateUser: ValidatorsService,
   ) {}
   async createFarmer(createFarmerDto: CreateFarmerDto) {
     const existingFarmer = await this.prisma.farmers.findUnique({
@@ -28,19 +29,47 @@ export class FarmerService {
     return farmerWithoutPassword;
   }
 
-  findAll() {
-    return `This action returns all farmer`;
+  async getAFarmerById(farmerId: string) {
+    await this.validateUser.validateFarmerId(farmerId);
+    const farmer = await this.prisma.farmers.findUnique({
+      where: { farmerId: farmerId },
+    });
+
+    const { password, refreshToken, ...nurseWithoutPassword } = farmer;
+    return nurseWithoutPassword;
+  }
+  async AllFarmersByAdminId(adminId: string) {
+    await this.validateUser.validateAdminId(adminId);
+
+    return this.prisma.farmers.findMany({
+      where: {
+        adminId: adminId,
+      },
+      select: {
+        farmerId: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        createdAt: true,
+        adminId: true,
+      },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} farmer`;
-  }
+  async updateFarmer(farmerId: string, updateFarmerDto: UpdateFarmerDto) {
+    await this.validateUser.validateFarmerId(farmerId);
 
-  update(id: number, updateFarmerDto: UpdateFarmerDto) {
-    return `This action updates a #${id} farmer`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} farmer`;
+    return await this.prisma.farmers.update({
+      where: { farmerId: farmerId },
+      data: updateFarmerDto,
+      select: {
+        farmerId: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        createdAt: true,
+        adminId: true,
+      },
+    });
   }
 }
