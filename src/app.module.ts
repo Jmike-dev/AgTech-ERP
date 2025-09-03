@@ -6,10 +6,11 @@ import { FarmerModule } from './farmer/farmer.module';
 import { CropsModule } from './crops/crops.module';
 import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { ValidatorsService } from './helper/validators/validators.service';
 
 @Module({
   imports: [AdminModule, FarmerModule, CropsModule, AuthModule, PrismaModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ValidatorsService],
 })
 export class AppModule {}
