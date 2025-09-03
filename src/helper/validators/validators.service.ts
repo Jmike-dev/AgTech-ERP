@@ -57,4 +57,29 @@ export class ValidatorsService {
       throw error;
     }
   }
+
+  async validateCropID(cropId: string) {
+    if (!cropId) {
+      throw new BadRequestException('crop ID must be provided');
+    }
+    try {
+      const existingCrop = await this.prisma.crops.findUnique({
+        where: {
+          cropId: cropId,
+        },
+        select: {
+          cropId: true,
+        },
+      });
+
+      if (!existingCrop) {
+        throw new NotFoundException('crop not found');
+      }
+
+      return existingCrop;
+    } catch (error) {
+      console.error('Error validating crop ID:', error);
+      throw error;
+    }
+  }
 }

@@ -1,26 +1,41 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCropDto } from './dto/create-crop.dto';
 import { UpdateCropDto } from './dto/update-crop.dto';
+import { ValidatorsService } from 'src/helper/validators/validators.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class CropsService {
-  create(createCropDto: CreateCropDto) {
-    return 'This action adds a new crop';
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly validateUser: ValidatorsService,
+  ) {}
+  async create(createCropDto: CreateCropDto) {
+    await this.validateUser.validateFarmerId(createCropDto.farmerId);
+    return this.prisma.crops.create({
+      data: createCropDto,
+    });
   }
 
-  findAll() {
-    return `This action returns all crops`;
+  async allCropsByFarmerId(farmerId: string) {
+    await this.validateUser.validateFarmerId(farmerId);
+    return await this.prisma.crops.findMany({
+      where: {
+        farmerId: farmerId,
+      },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} crop`;
+  async findOneCrop(cropId: string) {
+    await this.validateUser.validateCropID(cropId);
+    return await this.prisma.crops.findUnique({ where: { cropId: cropId } });
   }
 
-  update(id: number, updateCropDto: UpdateCropDto) {
-    return `This action updates a #${id} crop`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} crop`;
+  async updateCrop(cropId: string, updateCropDto: UpdateCropDto) {
+    await this.validateUser.validateCropID(cropId);
+    return await this.prisma.crops.update({
+      where: { cropId: cropId },
+      data: updateCropDto,
+    });
   }
 }
