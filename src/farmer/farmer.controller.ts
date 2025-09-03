@@ -20,14 +20,13 @@ export class FarmerController {
     return this.farmerService.createFarmer(createFarmerDto);
   }
 
-  // @Get()
-  // findAll() {
-  //   return this.farmerService.findAll();
-  // }
-
   @Get(':farmerId')
   findOne(@Param('farmerId') farmerId: string) {
     return this.farmerService.getAFarmerById(farmerId);
+  }
+  @Get('/admin/:adminId')
+  findAll(@Param('adminId') adminId: string) {
+    return this.farmerService.AllFarmersByAdminId(adminId);
   }
 
   // @Patch(':id')

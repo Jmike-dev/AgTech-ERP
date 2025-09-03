@@ -29,10 +29,6 @@ export class FarmerService {
     return farmerWithoutPassword;
   }
 
-  findAll() {
-    return `This action returns all farmer`;
-  }
-
   async getAFarmerById(farmerId: string) {
     await this.validateUser.validateFarmerId(farmerId);
     const farmer = await this.prisma.farmers.findUnique({
@@ -42,6 +38,24 @@ export class FarmerService {
     const { password, refreshToken, ...nurseWithoutPassword } = farmer;
     return nurseWithoutPassword;
   }
+  async AllFarmersByAdminId(adminId: string) {
+    await this.validateUser.validateAdminId(adminId);
+
+    return this.prisma.farmers.findMany({
+      where: {
+        adminId: adminId,
+      },
+      select: {
+        farmerId: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        createdAt: true,
+        adminId: true,
+      },
+    });
+  }
+
   update(id: number, updateFarmerDto: UpdateFarmerDto) {
     return `This action updates a #${id} farmer`;
   }
