@@ -20,23 +20,18 @@ export class FarmerController {
     return this.farmerService.createFarmer(createFarmerDto);
   }
 
-  @Get()
-  findAll() {
-    return this.farmerService.findAll();
+  // @Get()
+  // findAll() {
+  //   return this.farmerService.findAll();
+  // }
+
+  @Get(':farmerId')
+  findOne(@Param('farmerId') farmerId: string) {
+    return this.farmerService.getAFarmerById(farmerId);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.farmerService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateFarmerDto: UpdateFarmerDto) {
-    return this.farmerService.update(+id, updateFarmerDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.farmerService.remove(+id);
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateFarmerDto: UpdateFarmerDto) {
+  //   return this.farmerService.update(+id, updateFarmerDto);
+  // }
 }

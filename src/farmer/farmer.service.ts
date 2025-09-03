@@ -3,12 +3,13 @@ import { CreateFarmerDto } from './dto/create-farmer.dto';
 import { UpdateFarmerDto } from './dto/update-farmer.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcryptjs';
+import { ValidatorsService } from 'src/helper/validators/validators.service';
 
 @Injectable()
 export class FarmerService {
   constructor(
     private readonly prisma: PrismaService,
-    // private readonly validateUser: ValidatorsService,
+    private readonly validateUser: ValidatorsService,
   ) {}
   async createFarmer(createFarmerDto: CreateFarmerDto) {
     const existingFarmer = await this.prisma.farmers.findUnique({
@@ -32,10 +33,15 @@ export class FarmerService {
     return `This action returns all farmer`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} farmer`;
-  }
+  async getAFarmerById(farmerId: string) {
+    await this.validateUser.validateFarmerId(farmerId);
+    const farmer = await this.prisma.farmers.findUnique({
+      where: { farmerId: farmerId },
+    });
 
+    const { password, refreshToken, ...nurseWithoutPassword } = farmer;
+    return nurseWithoutPassword;
+  }
   update(id: number, updateFarmerDto: UpdateFarmerDto) {
     return `This action updates a #${id} farmer`;
   }

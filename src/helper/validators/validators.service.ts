@@ -33,4 +33,28 @@ export class ValidatorsService {
       throw error;
     }
   }
+  async validateFarmerId(farmerId: string) {
+    if (!farmerId) {
+      throw new BadRequestException('farmer ID must be provided');
+    }
+    try {
+      const existingAdmin = await this.prisma.farmers.findUnique({
+        where: {
+          farmerId: farmerId,
+        },
+        select: {
+          farmerId: true,
+        },
+      });
+
+      if (!existingAdmin) {
+        throw new NotFoundException('farmer not found');
+      }
+
+      return existingAdmin;
+    } catch (error) {
+      console.error('Error validating farmer ID:', error);
+      throw error;
+    }
+  }
 }
