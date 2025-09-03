@@ -29,6 +29,16 @@ export class AdminService {
     return adminWithoutPassword;
   }
 
+  async getAdminById(adminId: string) {
+    // await this.validateUser.validateNurseId(adminId);
+    const nurse = await this.prisma.admin.findUnique({
+      where: { adminId: adminId },
+    });
+
+    const { password, refreshToken, ...nurseWithoutPassword } = nurse;
+    return nurseWithoutPassword;
+  }
+
   findAll() {
     return `This action returns all admin`;
   }
