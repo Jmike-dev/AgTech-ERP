@@ -23,19 +23,31 @@ export class AdminService {
     const hashPassword = await bcrypt.hash(createAdminDto.password, 10);
     const admin = await this.prisma.admin.create({
       data: { ...createAdminDto, password: hashPassword },
+      select: {
+        adminId: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        role: true,
+      },
     });
 
-    const { password, refreshToken, ...adminWithoutPassword } = admin;
-    return adminWithoutPassword;
+    return admin;
   }
 
   async getAdminById(adminId: string) {
     await this.validateUser.validateAdminId(adminId);
-    const nurse = await this.prisma.admin.findUnique({
-      where: { adminId: adminId },
+    const admin = await this.prisma.admin.findUnique({
+      where: { adminId },
+      select: {
+        adminId: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        role: true,
+      },
     });
 
-    const { password, refreshToken, ...nurseWithoutPassword } = nurse;
-    return nurseWithoutPassword;
+    return admin;
   }
 }
