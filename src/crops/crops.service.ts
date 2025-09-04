@@ -25,6 +25,11 @@ export class CropsService {
       },
     });
   }
+  async allCropsByAdminId(adminId: string) {
+    await this.validateUser.validateAdminId(adminId);
+
+    return this.prisma.crops.findMany();
+  }
 
   async findOneCrop(cropId: string) {
     await this.validateUser.validateCropID(cropId);

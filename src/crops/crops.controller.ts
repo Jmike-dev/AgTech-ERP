@@ -24,6 +24,10 @@ export class CropsController {
   findAll(@Param('farmerId') farmerId: string) {
     return this.cropsService.allCropsByFarmerId(farmerId);
   }
+  @Get('admin/:adminId')
+  findAllCrop(@Param('adminId') adminId: string) {
+    return this.cropsService.allCropsByAdminId(adminId);
+  }
   @Get(':cropId')
   findOne(@Param('cropId') cropId: string) {
     return this.cropsService.findOneCrop(cropId);
