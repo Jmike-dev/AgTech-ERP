@@ -19,7 +19,7 @@ export class AuthController {
   async login(@Body() loginDto: { email: string; password: string }) {
     return this.authService.validateAdmin(loginDto.email, loginDto.password);
   }
-  @Post('login/farmers')
+  @Post('login/farmer')
   async loginfarmer(@Body() loginDto: { email: string; password: string }) {
     return this.authService.validateFarmer(loginDto.email, loginDto.password);
   }
